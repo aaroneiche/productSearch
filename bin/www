@@ -8,6 +8,19 @@ var app = require('../app');
 var debug = require('debug')('restdemo:server');
 var http = require('http');
 
+/** 
+ *  Check for environment vars. Specifically the API Key.
+*/
+const key = process.env.APIKEY;
+if(!key) {
+  //Looks like we need to reread the instructions.
+
+  console.error(`No API key found for Walmart product listing API. 
+  Please review the README for instructions`);
+
+  process.exit(0);
+}
+
 /**
  * Get port from environment and store in Express.
  */
