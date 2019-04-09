@@ -3,7 +3,7 @@ var router = express.Router();
 const axios = require('axios');
 
 /* Search Endpoint */
-router.get('/search/:searchTerm', async (req,res,next) => {
+router.get('/:searchTerm', async (req,res,next) => {
   
   /*   
   This is the full product ID set we've been asked to look at. 
@@ -17,8 +17,9 @@ router.get('/search/:searchTerm', async (req,res,next) => {
   http://api.walmartlabs.com/v1/items/?apiKey={apiKey}&ids=14225185,14225186,14225188,14225187,39082884,30146244
   
   */
-  
-  await axios.get()
+  // const wmItemsURL = `http://api.walmartlabs.com/v1/items/?apiKey=${apiKey}`;
+
+  // await axios.get(``)
 
   data = {}
   
