@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const axios = require('axios');
-const lib = require('../lib');
+const {filterKeyword} = require('../lib');
 
 /* Search Endpoint */
 router.get('/:searchTerm', async (req,res,next) => {
@@ -39,7 +39,7 @@ router.get('/:searchTerm', async (req,res,next) => {
     "42248076"
   ];
 
-  const maxItemLength = 6;  // Determined emperically.
+  const maxItemLength = 1;  // Determined emperically.
   var productResults = [];  // An array to feed products into.
 
   //Because of rate limiting, we're going to get the product set in chunks. 
@@ -48,13 +48,12 @@ router.get('/:searchTerm', async (req,res,next) => {
     let subset = products.splice(0,maxItemLength);
 
     var url = `http://api.walmartlabs.com/v1/items?apiKey=${process.env.APIKEY}&ids=${subset.join(",")}`;
-    // console.log(url);
     
     let callProducts = await axios.get(url).then(function(response){
       
       //We're going to ignore adding these products to our set: Invalid Ids.
       if(response.data.errors) {
-        console.log("Error - ");
+        //Error 
         return [];
       }
 
@@ -65,7 +64,7 @@ router.get('/:searchTerm', async (req,res,next) => {
   }
 
   res.status(200); //Broadly assume we're finding something here.
-  res.json(lib.filterKeyword(productResults,req.params.searchTerm,"longDescription"));
+  res.json(filterKeyword(productResults,req.params.searchTerm,"longDescription"));
 });
 
 module.exports = router;

@@ -3,7 +3,6 @@
     for a keyword in the objects based on the provided field.
 */
 filterKeyword = (searchSet, keyword, field) => {
-
     const keyMatch = new RegExp(keyword,'i');
 
     return searchSet.filter(item=>{
