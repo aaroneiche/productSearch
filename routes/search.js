@@ -26,17 +26,17 @@ router.get('/:searchTerm', async (req,res,next) => {
     "39082884",
     "30146244",
     "12662817",
-    // "34890820",
-    // "19716431",
-    // "42391766",
-    // "35813552",
-    // "40611708",
-    // "40611825",
-    // "36248492",
-    // "44109840",
-    // "23117408",
-    // "35613901",
-    // "42248076"
+    "34890820",
+    "19716431",
+    "42391766",
+    "35813552",
+    "40611708",
+    "40611825",
+    "36248492",
+    "44109840",
+    "23117408",
+    "35613901",
+    "42248076"
   ];
 
   const maxItemLength = 6;  // Determined emperically.
@@ -51,18 +51,21 @@ router.get('/:searchTerm', async (req,res,next) => {
     // console.log(url);
     
     let callProducts = await axios.get(url).then(function(response){
+      
+      //We're going to ignore adding these products to our set: Invalid Ids.
+      if(response.data.errors) {
+        console.log("Error - ");
+        return [];
+      }
+
       return response.data.items;
     });
     //Put the incoming product set into an array to return.
     productResults = productResults.concat(callProducts);
-
   }
 
-
-
   res.status(200); //Broadly assume we're finding something here.
-  res.json(productResults);
-
+  res.json(lib.filterKeyword(productResults,req.params.searchTerm,"longDescription"));
 });
 
 module.exports = router;
