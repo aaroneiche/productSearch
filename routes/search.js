@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const axios = require('axios');
+const lib = require('../lib');
 
 /* Search Endpoint */
 router.get('/:searchTerm', async (req,res,next) => {
@@ -41,6 +42,7 @@ router.get('/:searchTerm', async (req,res,next) => {
   const maxItemLength = 6;  // Determined emperically.
   var productResults = [];  // An array to feed products into.
 
+  //Because of rate limiting, we're going to get the product set in chunks. 
   while(products.length > 0) {
     
     let subset = products.splice(0,maxItemLength);
@@ -49,23 +51,15 @@ router.get('/:searchTerm', async (req,res,next) => {
     // console.log(url);
     
     let callProducts = await axios.get(url).then(function(response){
-      // console.log(response.status);
-      // console.log(response.data);
       return response.data.items;
-      // console.log(typeof response.data.items);
-      // if(response.data.items) {
-      //   return response.data.items;
-      // }
-      // return [];
     });
+    //Put the incoming product set into an array to return.
     productResults = productResults.concat(callProducts);
 
-    
-    
   }
 
-  // data = {}
-  
+
+
   res.status(200); //Broadly assume we're finding something here.
   res.json(productResults);
 
