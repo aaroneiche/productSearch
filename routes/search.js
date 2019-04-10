@@ -39,7 +39,7 @@ router.get('/:searchTerm', async (req,res,next) => {
     "42248076"
   ];
 
-  const maxItemLength = 1;  // Determined emperically.
+  const maxItemLength = 6;  // Determined emperically.
   var productResults = [];  // An array to feed products into.
 
   //Because of rate limiting, we're going to get the product set in chunks. 
@@ -51,13 +51,20 @@ router.get('/:searchTerm', async (req,res,next) => {
     
     let callProducts = await axios.get(url).then(function(response){
       
-      //We're going to ignore adding these products to our set: Invalid Ids.
-      if(response.data.errors) {
-        //Error 
-        return [];
-      }
+        //We're going to ignore adding these products to our set: Invalid Ids.
+        console.log(subset[0]);
+              
+        /* if(response.data.errors) {
+          //Error 
+          return [];
+        } */
 
-      return response.data.items;
+        return response.data.items;
+
+      
+    }).catch(function(err){
+      console.log(err);
+      return [];
     });
     //Put the incoming product set into an array to return.
     productResults = productResults.concat(callProducts);
