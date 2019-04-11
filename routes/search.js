@@ -51,9 +51,6 @@ router.get('/:searchTerm', async (req,res,next) => {
 
     try {
       let callProducts = await axios.get(url).then(function(response){
-      
-        //We're going to ignore adding these products to our set: Invalid Ids.
-        console.log(subset[0]);
               
         if(response.data.errors) {
           //return an empty dataset, as we may still aggregate products.
@@ -73,8 +70,6 @@ router.get('/:searchTerm', async (req,res,next) => {
       productResults = productResults.concat(callProducts);
 
     } catch(err) {
-      console.log("Walmart API Request error", err);
-      
       res.status(500);
       res.send("Difficulty communicating with remote server." + err);
     }

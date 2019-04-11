@@ -1,6 +1,7 @@
 /* Some tests to run on the server */
 
-const mocha = require('mocha');
+// const mocha = require('mocha');
+require('mocha');
 const chai = require('chai');
 const should = chai.should();
 const chaiHttp = require('chai-http');
