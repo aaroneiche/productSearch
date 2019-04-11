@@ -8,7 +8,7 @@ A few things to do before you can get started/run locally:
  * `npm install`: This will install the dependencies.
  * Setup an `app-settings` file for API key - this keeps the API key out of the repo.
     * Create a file called `app-settings` in the root directory
-    * Put the following into the file: `export APIKEY="YOURKEYHERE"`
+    * Put the following into the file: `export APIKEY="YOURKEYHERE"` (Replace with your key)
     * Bring the file into your dev environment. In a terminal, type:  `source app-settings`
  
 ### Running
