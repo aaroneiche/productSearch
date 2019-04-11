@@ -48,30 +48,45 @@ router.get('/:searchTerm', async (req,res,next) => {
     let subset = products.splice(0,maxItemLength);
 
     var url = `http://api.walmartlabs.com/v1/items?apiKey=${process.env.APIKEY}&ids=${subset.join(",")}`;
-    
-    let callProducts = await axios.get(url).then(function(response){
+
+    try {
+      let callProducts = await axios.get(url).then(function(response){
       
         //We're going to ignore adding these products to our set: Invalid Ids.
         console.log(subset[0]);
               
-        /* if(response.data.errors) {
-          //Error 
+        if(response.data.errors) {
+          //return an empty dataset, as we may still aggregate products.
           return [];
-        } */
+        }
 
         return response.data.items;
 
+      }).catch(function(err){
+        /* 
+        If the call fails, we'll throw an error to passback.  
+        this is different than a call that returns nothing, or an error.        
+        */
+        throw(err);
+      });
+      //Put the incoming product set into an array to return.
+      productResults = productResults.concat(callProducts);
+
+    } catch(err) {
+      console.log("Walmart API Request error", err);
       
-    }).catch(function(err){
-      console.log(err);
-      return [];
-    });
-    //Put the incoming product set into an array to return.
-    productResults = productResults.concat(callProducts);
+      res.status(500);
+      res.send("Difficulty communicating with remote server." + err);
+    }
   }
 
-  res.status(200); //Broadly assume we're finding something here.
-  res.json(filterKeyword(productResults,req.params.searchTerm,"longDescription"));
+  let filteredItems = filterKeyword(productResults,req.params.searchTerm,"longDescription");
+  let response = {
+    items: filteredItems
+  }
+
+  res.status(200);
+  res.json(response);
 });
 
 module.exports = router;
