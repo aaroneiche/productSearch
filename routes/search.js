@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const axios = require('axios');
-const {filterKeyword} = require('../lib');
+const {filterKeyword, delay} = require('../lib');
 
 /* Search Endpoint */
 router.get('/:searchTerm', async (req,res,next) => {
@@ -38,7 +38,6 @@ router.get('/:searchTerm', async (req,res,next) => {
     "35613901",
     "42248076"
   ];
-
   const maxItemLength = 6;  // Determined emperically.
   var productResults = [];  // An array to feed products into.
 
@@ -47,11 +46,11 @@ router.get('/:searchTerm', async (req,res,next) => {
     
     let subset = products.splice(0,maxItemLength);
 
+    //Generate a url for this batch of product IDs
     var url = `http://api.walmartlabs.com/v1/items?apiKey=${process.env.APIKEY}&ids=${subset.join(",")}`;
 
     try {
       let callProducts = await axios.get(url).then(function(response){
-              
         if(response.data.errors) {
           //return an empty dataset, as we may still aggregate products.
           return [];
@@ -73,6 +72,7 @@ router.get('/:searchTerm', async (req,res,next) => {
       res.status(500);
       res.send("Difficulty communicating with remote server." + err);
     }
+    await delay(process.env.RATEMIN); //Provides us with management for rate limiting.
   }
 
   let filteredItems = filterKeyword(productResults,req.params.searchTerm,"longDescription");

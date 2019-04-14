@@ -12,8 +12,13 @@ chai.use(chaiHttp);
 
 
 describe("Search", function() {
-
+    
     it("Searches for mattress", function(done) {
+        
+        // need a little more time due to the rate limiting.
+        // The minimum rate time multiplied by the max number of products
+        
+        this.timeout(process.env.RATEMIN * 18);     
         
         //Returns products matching mattress
         chai.request(server)
@@ -30,6 +35,7 @@ describe("Search", function() {
     });
 
     it("Searches for backpack", function(done) {
+        this.timeout(process.env.RATEMIN * 18); 
 
         //Returns products matching backpack
         chai.request(server)
