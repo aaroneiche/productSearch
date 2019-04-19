@@ -6,8 +6,95 @@
 </head>
 
 <body>
-  <h1>Express</h1>
-  <p>Welcome to Express</p>
+  <div id="container">
+    <div id="productSearch">
+      <p>To search for a product, press the search button after typing in a keyword</p>
+      <label for="searchText">Product Search</label>
+      <input id="searchText" name="searchText" type="text">
+      <button id="search">Search!</button>
+      <span>
+          <img id="spinner" src="walmart.png" class="" alt="">
+      </span>
+    </div>
+    <div id="searchResults">
+      <p id="notFound"></p>
+      <table id="items">
+        <tbody id="itemsList">
+        </tbody>
+      </table>
+    </div>
+  </div>
 </body>
+<script>
 
+
+  document.addEventListener('DOMContentLoaded',e=>{
+    document.getElementById("search").addEventListener('click',ev=>{
+      getProducts();
+    })
+  });
+
+  const getProducts = () => {
+    url = "http://localhost:3000/search/"
+    var r = new XMLHttpRequest();
+    r.open("GET",url + document.getElementById('searchText').value);
+    document.getElementById("spinner").classList.add("spin");
+      //Set a loading spinner.
+
+      r.onload = () => {
+          if(r.status == 200) {
+              data = JSON.parse(r.responseText);
+              displayItems(data.items);
+
+          }else{
+              //probably an error - possibly a 3xx status code.
+              showError("Error communicating with backend");
+          }
+          document.getElementById("spinner").classList.remove("spin");
+      }
+      r.send();
+  }    
+
+  const displayItems = (items) => {
+    const list = document.getElementById("itemsList");
+      list.innerHTML = "";
+      document.getElementById("notFound").classList.remove("show");
+
+      if(items.length === 0) {
+        const notFound = document.getElementById("notFound");
+        notFound.innerHTML = "Sorry, couldn't find " + document.getElementById('searchText').value;
+        notFound.classList.add("show");
+      }else {
+        items.forEach(item => {
+          const i = generateItem(item);
+          list.appendChild(i);
+        });
+      }
+  }
+
+  const generateItem = (itemData) => {
+    const imageContainer = document.createElement("td");
+    const image = document.createElement("img");
+    const desc = document.createElement("td");
+    const price = document.createElement("td");
+    
+    const product = document.createElement("tr");
+    desc.innerHTML = itemData.shortDescription.slice(0,itemData.shortDescription.indexOf("."));
+    
+
+    image.src = itemData.thumbnailImage;
+    var formattedPrice = Number(itemData.salePrice).toFixed(2);
+    price.innerHTML = "$" + String(formattedPrice);
+
+    imageContainer.appendChild(image);
+    product.appendChild(price);
+    product.appendChild(imageContainer);
+    product.appendChild(desc);
+    
+
+    return product;
+    
+  }
+
+</script>
 </html>
