@@ -75,21 +75,29 @@
   const generateItem = (itemData) => {
     const imageContainer = document.createElement("td");
     const image = document.createElement("img");
-    const desc = document.createElement("td");
-    const price = document.createElement("td");
+    const info = document.createElement("td");
+    const price = document.createElement("div");
     
-    const product = document.createElement("tr");
+    const title = document.createElement("div");
+    const desc = document.createElement("div");
+    title.classList.add("title");
+    title.innerHTML = itemData.name;    
     desc.innerHTML = itemData.shortDescription.slice(0,itemData.shortDescription.indexOf("."));
-    
 
+    const product = document.createElement("tr");
+    info.appendChild(title);
+    info.appendChild(desc);
+    
     image.src = itemData.thumbnailImage;
     var formattedPrice = Number(itemData.salePrice).toFixed(2);
     price.innerHTML = "$" + String(formattedPrice);
 
     imageContainer.appendChild(image);
-    product.appendChild(price);
+    info.appendChild(price);
+    
     product.appendChild(imageContainer);
-    product.appendChild(desc);
+    product.appendChild(info);
+    
     
 
     return product;

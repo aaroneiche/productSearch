@@ -14,7 +14,9 @@ p#notFound.show{
   visibility: visible;
 }
 
-
+.title {
+  font-weight: bold;
+}
 
 img#spinner {
   width: 30px;
