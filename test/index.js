@@ -28,7 +28,24 @@ describe("Search", function() {
             
             should.not.exist(err);
             res.status.should.equal(200);
-            res.body.items.length.should.not.equal(0);
+            res.body.items.length.should.equal(4);
+
+            const result1 = res.body.items[0];
+            const result2 = res.body.items[1];
+            const result3 = res.body.items[2];
+            const result4 = res.body.items[3];
+
+            result1.itemId.should.equal(14225185);
+            result1.upc.should.equal("841550034950")
+
+            result2.itemId.should.equal(14225186);
+            result2.upc.should.equal("841550034967")
+
+            result3.itemId.should.equal(14225187);
+            result3.upc.should.equal("841550034974");
+
+            result4.itemId.should.equal(14225188);
+            result4.upc.should.equal("841550034981");
 
             done();
         })

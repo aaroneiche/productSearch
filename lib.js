@@ -5,9 +5,14 @@
 const filterKeyword = (searchSet, keyword, field) => {
     const keyMatch = new RegExp(keyword,'i');
 
-    return searchSet.filter(item=>{
+    var set = searchSet.filter(item=>{
         return item[field].match(keyMatch);
     })
+
+    return set.sort((a,b)=>{
+        return a.itemId > b.itemId;
+    })
+
 }
 /* 
 delay 
